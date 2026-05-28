@@ -80,26 +80,6 @@ function Divider({ gradient = "linear-gradient(90deg, transparent, #C4351A, tran
   return <div style={{ height: 1, background: gradient, opacity: 0.5, margin: 0 }} />;
 }
 
-// ── PRISM Logo SVG (geometric prism mark) ──
-function PrismLogo({ size = 40 }) {
-  return (
-    <svg viewBox="0 0 48 48" width={size} height={size} fill="none">
-      <defs>
-        <linearGradient id="prismGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#E74BA3" />
-          <stop offset="33%" stopColor="#C4351A" />
-          <stop offset="66%" stopColor="#8B2252" />
-          <stop offset="100%" stopColor="#4DD0E1" />
-        </linearGradient>
-      </defs>
-      <polygon points="24,4 44,40 4,40" stroke="url(#prismGrad)" strokeWidth="2.5" fill="none" />
-      <line x1="24" y1="4" x2="14" y2="40" stroke="#C4351A" strokeWidth="1.5" opacity="0.5" />
-      <line x1="24" y1="4" x2="34" y2="40" stroke="#8B2252" strokeWidth="1.5" opacity="0.5" />
-      <line x1="24" y1="4" x2="24" y2="40" stroke="#E74BA3" strokeWidth="1.5" opacity="0.3" />
-    </svg>
-  );
-}
-
 // ── Grain overlay component ──
 function GrainOverlay() {
   return (
@@ -170,6 +150,80 @@ export default function PrismWebsite() {
         @keyframes scrollPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
         a { text-decoration: none; color: inherit; }
+
+        /* ── DESKTOP: floating hero image ── */
+        .hero-float-img {
+          position: absolute;
+          right: 5%;
+          top: 15%;
+          width: clamp(200px, 25vw, 400px);
+          opacity: 0.2;
+          animation: float 6s ease-in-out infinite;
+          z-index: 0;
+          filter: blur(1px);
+          pointer-events: none;
+        }
+
+        /* ── DESKTOP: background portrait images ── */
+        .bg-portrait {
+          opacity: 0.08;
+        }
+
+        /* ── MOBILE RESPONSIVE ── */
+        @media (max-width: 768px) {
+          .nav-desktop { display: none !important; }
+          section { padding-left: 1rem !important; padding-right: 1rem !important; }
+          .service-row { grid-template-columns: 1fr !important; gap: 1rem !important; }
+          .training-grid { grid-template-columns: 1fr !important; }
+          .why-cards { grid-template-columns: 1fr !important; }
+          .footer-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+          .what-combines-inner { grid-template-columns: 1fr 1fr !important; }
+          .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+
+          /* Hero floating image: show at bottom of hero on mobile, more visible */
+          .hero-float-img {
+            position: relative !important;
+            right: auto !important;
+            top: auto !important;
+            width: 80% !important;
+            max-width: 320px !important;
+            opacity: 0.25 !important;
+            display: block !important;
+            margin: 2rem auto 0 !important;
+            animation: float 6s ease-in-out infinite !important;
+            filter: none !important;
+          }
+
+          /* Background portrait images: show as bottom-aligned decorative images on mobile */
+          .bg-portrait {
+            opacity: 0.12 !important;
+            height: auto !important;
+            width: 60% !important;
+            max-width: 220px !important;
+            bottom: 0 !important;
+            top: auto !important;
+            right: 0 !important;
+            left: auto !important;
+            transform: none !important;
+          }
+
+          /* Newton prism image in "What Is" section */
+          .bg-portrait-left {
+            left: auto !important;
+            right: 0 !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .what-combines-inner { grid-template-columns: 1fr !important; }
+          .hero-float-img {
+            width: 65% !important;
+          }
+          .bg-portrait {
+            width: 45% !important;
+            opacity: 0.1 !important;
+          }
+        }
       `}</style>
 
       {/* ═══ NAVIGATION ═══ */}
@@ -184,8 +238,8 @@ export default function PrismWebsite() {
             <img src="prism-logo-mark.png" alt="PRISM" style={{ width: 32, height: 32 }} />
             <span style={{ fontWeight: 900, fontSize: "1.2rem", letterSpacing: "0.25em", color: "#f0ebe0" }}>PRISM</span>
           </a>
-          <div style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
-            {["About", "Training", "Agency", "Studio", "Contact"].map((item) => (
+          <div className="nav-desktop" style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
+            {["About", "Agency", "Studio", "Training", "Contact"].map((item) => (
               <a key={item} href={`#${item.toLowerCase()}`} style={{
                 color: "#8a7e84", fontSize: "0.8rem", fontWeight: 500,
                 letterSpacing: "0.08em", textTransform: "uppercase", transition: "color 0.3s",
@@ -205,18 +259,12 @@ export default function PrismWebsite() {
       }}>
         <div style={{ position: "absolute", inset: 0, background: gradients.hero }} />
         <GrainOverlay />
-        {/* Floating prism cube */}
-        <img src="" alt="" style={{
-          position: "absolute", right: "5%", top: "15%", width: "clamp(200px, 25vw, 400px)",
-          opacity: 0.2, animation: "float 6s ease-in-out infinite", zIndex: 0,
-          filter: "blur(1px)", pointerEvents: "none",
-        }} />
-        {/* Decorative geometric pattern - top left */}
+        {/* Decorative geometric pattern — bottom-left, always shown */}
         <img src="deco-geometric-pattern.png" alt="" style={{
           position: "absolute", left: "-5%", bottom: "10%", width: "clamp(150px, 20vw, 300px)",
           opacity: 0.06, transform: "rotate(-15deg)", zIndex: 0, pointerEvents: "none",
         }} />
-        <div style={{ position: "relative", zIndex: 1, textAlign: "center", maxWidth: 1000 }}>
+        <div style={{ position: "relative", zIndex: 1, textAlign: "center", maxWidth: 1000, width: "100%" }}>
           <Reveal>
             <p style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.75rem", letterSpacing: "0.4em", textTransform: "uppercase", color: "#E74BA3", marginBottom: "2rem" }}>
               A New Engine for Human Imagination
@@ -224,8 +272,8 @@ export default function PrismWebsite() {
           </Reveal>
           <Reveal delay={0.15}>
             <h1 style={{ fontSize: "clamp(4rem, 14vw, 10rem)", fontWeight: 900, lineHeight: 0.9, letterSpacing: "-0.04em", marginBottom: "1.5rem" }}>
-  <span style={{ color: "#fff" }}>PRISM</span>
-</h1>
+              <span style={{ color: "#fff" }}>PRISM</span>
+            </h1>
           </Reveal>
           <Reveal delay={0.3}>
             <p style={{ fontSize: "clamp(1.3rem, 3vw, 1.8rem)", fontWeight: 700, marginBottom: "1.5rem", lineHeight: 1.3, color: "#fff" }}>
@@ -251,8 +299,11 @@ export default function PrismWebsite() {
               }}>Partner With Us</a>
             </div>
           </Reveal>
+          {/* Hero floating image — rendered inside content flow on mobile, absolutely positioned on desktop */}
+          <img src="" alt="" className="hero-float-img" style={{
+            position: "absolute", right: "5%", top: "15%",
+          }} />
         </div>
-        {/* Scroll indicator */}
         <div style={{ position: "absolute", bottom: "2rem", left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem", opacity: 0, animation: "fadeUp 0.8s 1.2s forwards" }}>
           <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.65rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "#8a7e84" }}>Scroll</span>
           <div style={{ width: 1, height: 40, background: "linear-gradient(to bottom, #E74BA3, transparent)", animation: "scrollPulse 2s infinite" }} />
@@ -263,10 +314,9 @@ export default function PrismWebsite() {
       <section style={{ position: "relative", padding: "clamp(5rem, 10vw, 10rem) 2rem", textAlign: "center", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, background: gradients.manifesto }} />
         <GrainOverlay />
-        {/* Atmospheric portrait */}
-        <img src="creative-portrait-afro.png" alt="" style={{
+        <img src="creative-portrait-afro.png" alt="" className="bg-portrait" style={{
           position: "absolute", right: "-5%", bottom: "-5%", height: "80%",
-          opacity: 0.07, zIndex: 0, pointerEvents: "none", filter: "grayscale(0.5)",
+          zIndex: 0, pointerEvents: "none", filter: "grayscale(0.5)",
         }} />
         <div style={{ position: "relative", zIndex: 1, maxWidth: 900, margin: "0 auto" }}>
           <Reveal>
@@ -325,7 +375,6 @@ export default function PrismWebsite() {
               position: "relative", width: "100%", aspectRatio: "16/9", background: "#000",
               border: "1px solid rgba(240,235,224,0.12)", overflow: "hidden", cursor: "pointer",
             }}>
-              {/* Corner accents */}
               {[
                 { top: -1, left: -1, borderTop: "2px solid #C4351A", borderLeft: "2px solid #C4351A" },
                 { top: -1, right: -1, borderTop: "2px solid #8B2252", borderRight: "2px solid #8B2252" },
@@ -334,12 +383,10 @@ export default function PrismWebsite() {
               ].map((s, i) => (
                 <div key={i} style={{ position: "absolute", width: 28, height: 28, zIndex: 3, pointerEvents: "none", ...s }} />
               ))}
-
               <video ref={videoRef} preload="metadata" playsInline style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                 onEnded={() => setVideoPlaying(false)}>
                 <source src="prism_prezi.mp4" type="video/mp4" />
               </video>
-
               {!videoPlaying && (
                 <div style={{
                   position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center",
@@ -363,13 +410,11 @@ export default function PrismWebsite() {
       {/* ═══ WHAT IS PRISM ═══ */}
       <section id="about" style={{ position: "relative", padding: "clamp(5rem, 10vw, 10rem) 2rem", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, background: gradients.whatIs }} />
-        {/* Newton prism experiment — atmospheric background */}
-        <img src="newton-prism-experiment.jpg" alt="" style={{
+        <img src="newton-prism-experiment.jpg" alt="" className="bg-portrait bg-portrait-left" style={{
           position: "absolute", right: "-2%", top: "50%", transform: "translateY(-50%)",
-          width: "clamp(250px, 35vw, 500px)", opacity: 0.08, zIndex: 0,
-          pointerEvents: "none", filter: "grayscale(0.3)",
+          width: "clamp(250px, 35vw, 500px)",
+          zIndex: 0, pointerEvents: "none", filter: "grayscale(0.3)",
         }} />
-        {/* Purple zigzag accent */}
         <img src="deco-zigzag-purple.png" alt="" style={{
           position: "absolute", left: "2%", bottom: "8%", width: "clamp(80px, 12vw, 160px)",
           opacity: 0.12, zIndex: 0, pointerEvents: "none", transform: "rotate(-10deg)",
@@ -389,7 +434,6 @@ export default function PrismWebsite() {
               PRISM is building a distributed creative production system designed for the AI era — where global brands, streaming platforms, technology companies, and creators can access agile, high-quality, culturally intelligent creative production at scale.
             </p>
           </Reveal>
-
           <Reveal delay={0.3}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem", marginBottom: "3rem" }}>
               {["Creative training", "Agency production", "AI-powered workflows", "Original IP development", "Distributed creator networks"].map((item, i) => {
@@ -464,117 +508,21 @@ export default function PrismWebsite() {
         </div>
       </section>
 
-      {/* ─── 01 PRISM TRAINING (HERO DIVISION) ─── */}
-      <section id="training" style={{ position: "relative", padding: "clamp(4rem, 6vw, 6rem) 2rem clamp(5rem, 8vw, 8rem)" }}>
-        <div style={{ position: "absolute", inset: 0, background: gradients.training }} />
-        <GrainOverlay />
-        <div style={{ position: "relative", zIndex: 1, maxWidth: 1200, margin: "0 auto" }}>
-          <Reveal>
-            <div style={{ marginBottom: "2rem" }}>
-              <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.85rem", color: "#E74BA3", letterSpacing: "0.15em" }}>01</span>
-              <h2 style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", fontWeight: 900, letterSpacing: "-0.02em", lineHeight: 1, marginTop: "0.5rem", color: "#fff" }}>
-                PRISM{" "}
-                <span style={{ background: headingGradients.training, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Training</span>
-              </h2>
-              <p style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.75rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "#4DD0E1", marginTop: "0.75rem" }}>Building Sustainable Creators</p>
-            </div>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <p style={{ fontSize: "1.1rem", color: "#8a7e84", maxWidth: 760, lineHeight: 1.8, fontWeight: 300, marginBottom: "3rem" }}>
-              A modern creative learning and industry upskilling platform designed for the future of storytelling. We equip creators, teams, and organizations with the creative, strategic, and production capabilities needed to thrive.
-            </p>
-          </Reveal>
-
-          {/* Three training sub-programs in visual blocks */}
-          <Reveal delay={0.2}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1px", background: "rgba(240,235,224,0.06)", border: "1px solid rgba(240,235,224,0.06)", marginBottom: "3rem" }}>
-              {/* Incubator */}
-              <div style={{ background: "#120a0d", padding: "2.5rem" }}>
-                <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.7rem", color: "#C4351A", letterSpacing: "0.2em" }}>PROGRAM 01</span>
-                <h3 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#fff", margin: "0.75rem 0 1rem" }}>The 12-Week PRISM Creative Incubator</h3>
-                <p style={{ fontSize: "0.9rem", color: "#8a7e84", lineHeight: 1.7, marginBottom: "1.5rem" }}>
-                  An immersive AI-first creative incubator designed to help creators build sustainable careers in the modern creator economy.
-                </p>
-                <p style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.65rem", letterSpacing: "0.25em", textTransform: "uppercase", color: "#E74BA3", marginBottom: "0.75rem" }}>Career Pathways</p>
-                {["Original IP Creators", "Platform Builders", "Artist Collaborators", "Commercial Creators", "Hybrid Creators"].map((p) => (
-                  <p key={p} style={{ fontSize: "0.85rem", color: "#8a7e84", padding: "0.4rem 0", borderBottom: "1px solid rgba(240,235,224,0.06)" }}>
-                    <span style={{ color: "#C4351A", marginRight: "0.5rem" }}>→</span> {p}
-                  </p>
-                ))}
-              </div>
-
-              {/* Curriculum Design */}
-              <div style={{ background: "#120a0d", padding: "2.5rem" }}>
-                <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.7rem", color: "#8B2252", letterSpacing: "0.2em" }}>PROGRAM 02</span>
-                <h3 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#fff", margin: "0.75rem 0 1rem" }}>Curriculum Design & Industry Capacity Building</h3>
-                <p style={{ fontSize: "0.9rem", color: "#8a7e84", lineHeight: 1.7, marginBottom: "1.5rem" }}>
-                  We partner with brands, institutions, creative ecosystems, and industry stakeholders to design and deliver future-focused creative learning experiences.
-                </p>
-                <p style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.65rem", letterSpacing: "0.25em", textTransform: "uppercase", color: "#4DD0E1", marginBottom: "0.75rem" }}>We help organizations</p>
-                {["Upskill creative teams", "Integrate AI into creative workflows", "Build internal storytelling capability", "Train emerging creative talent"].map((p) => (
-                  <p key={p} style={{ fontSize: "0.85rem", color: "#8a7e84", padding: "0.4rem 0", borderBottom: "1px solid rgba(240,235,224,0.06)" }}>
-                    <span style={{ color: "#8B2252", marginRight: "0.5rem" }}>→</span> {p}
-                  </p>
-                ))}
-              </div>
-
-              {/* Creative Leadership */}
-              <div style={{ background: "#120a0d", padding: "2.5rem" }}>
-                <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.7rem", color: "#4DD0E1", letterSpacing: "0.2em" }}>PROGRAM 03</span>
-                <h3 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#fff", margin: "0.75rem 0 1rem" }}>Creative Leadership & Industry Workshops</h3>
-                <p style={{ fontSize: "0.9rem", color: "#8a7e84", lineHeight: 1.7, marginBottom: "1.5rem" }}>
-                  Short-form workshops and executive learning experiences for professionals navigating the future of creativity and AI-powered production.
-                </p>
-                <p style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.65rem", letterSpacing: "0.25em", textTransform: "uppercase", color: "#E74BA3", marginBottom: "0.75rem" }}>Topics include</p>
-                {["AI & the future of creativity", "Creative leadership", "Storytelling for brands", "Platform-native content strategy", "Creator economy trends", "Creative entrepreneurship"].map((p) => (
-                  <p key={p} style={{ fontSize: "0.85rem", color: "#8a7e84", padding: "0.4rem 0", borderBottom: "1px solid rgba(240,235,224,0.06)" }}>
-                    <span style={{ color: "#4DD0E1", marginRight: "0.5rem" }}>→</span> {p}
-                  </p>
-                ))}
-              </div>
-            </div>
-          </Reveal>
-
-          {/* Why PRISM Training */}
-          <Reveal delay={0.3}>
-            <DecoAccent type="triangle" color="#E74BA3" style={{ marginBottom: "1.5rem" }} />
-            <p style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.75rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "#C4351A", marginBottom: "1.5rem" }}>Why PRISM Training</p>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "2rem" }}>
-              {[
-                { title: "AI-First Curriculum", desc: "Creators learn modern production workflows using the latest AI creative tools.", color: "#C4351A" },
-                { title: "Real Production Experience", desc: "Creators develop films, branded content, social campaigns, and platform-native work.", color: "#E74BA3" },
-                { title: "Creativity + Commerce", desc: "PRISM develops creators who understand both artistic excellence and commercial execution.", color: "#8B2252" },
-                { title: "Built for the Modern Creator Economy", desc: "Prepares creators for platforms, agencies, original IP creation, and evolving AI-powered industries.", color: "#4DD0E1" },
-              ].map((c) => (
-                <div key={c.title} style={{ paddingTop: "1.5rem", borderTop: `2px solid ${c.color}` }}>
-                  <h4 style={{ fontSize: "1rem", fontWeight: 700, color: "#fff", marginBottom: "0.5rem" }}>{c.title}</h4>
-                  <p style={{ fontSize: "0.85rem", color: "#8a7e84", lineHeight: 1.7 }}>{c.desc}</p>
-                </div>
-              ))}
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      <Divider gradient="linear-gradient(90deg, transparent, #C91D7D, transparent)" />
-
-      {/* ─── 02 PRISM AGENCY ─── */}
+      {/* ─── 01 PRISM AGENCY ─── */}
       <section id="agency" style={{ position: "relative", padding: "clamp(5rem, 8vw, 8rem) 2rem", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, background: gradients.agency }} />
         <GrainOverlay />
-        {/* Creative woman in ankara — accent portrait */}
-        <img src="creative-woman-ankara.png" alt="" style={{
+        <img src="creative-woman-ankara.png" alt="" className="bg-portrait" style={{
           position: "absolute", left: "-3%", top: "10%", height: "60%",
-          opacity: 0.1, zIndex: 0, pointerEvents: "none",
+          zIndex: 0, pointerEvents: "none",
         }} />
-        {/* Texture grid accent */}
         <img src="texture-grid-red.png" alt="" style={{
           position: "absolute", right: "0", bottom: "0", width: "clamp(120px, 15vw, 250px)",
           opacity: 0.05, zIndex: 0, pointerEvents: "none",
         }} />
         <div style={{ position: "relative", zIndex: 1, maxWidth: 1200, margin: "0 auto" }}>
           <Reveal>
-            <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.85rem", color: "#4DD0E1", letterSpacing: "0.15em" }}>02</span>
+            <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.85rem", color: "#4DD0E1", letterSpacing: "0.15em" }}>01</span>
             <h2 style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", fontWeight: 900, letterSpacing: "-0.02em", lineHeight: 1, marginTop: "0.5rem", color: "#fff" }}>
               PRISM{" "}
               <span style={{ background: headingGradients.agency, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Agency</span>
@@ -586,7 +534,6 @@ export default function PrismWebsite() {
               A full-service creative agency delivering premium creative work for African and international clients. Powered by top-performing talent from the PRISM ecosystem, AI-enhanced workflows, and commercially driven strategy.
             </p>
           </Reveal>
-
           <Reveal delay={0.2}>
             <div style={{ display: "flex", flexDirection: "column", borderTop: "1px solid rgba(240,235,224,0.06)" }}>
               {[
@@ -595,7 +542,7 @@ export default function PrismWebsite() {
                 { title: "Content Production", desc: "From cinematic storytelling to social-first execution — content built for modern audiences and platforms.", tags: ["Commercial", "Branded content", "Social video", "Documentary", "Motion graphics"], color: "#8B2252" },
                 { title: "Platform & Creator Content", desc: "We help brands and creators build meaningful digital presence and sustained audience engagement.", tags: ["YouTube", "TikTok", "Podcast", "Creator partnerships"], color: "#4DD0E1" },
               ].map((svc) => (
-                <div key={svc.title} style={{ display: "grid", gridTemplateColumns: "280px 1fr", gap: "2rem", padding: "2rem 0", borderBottom: "1px solid rgba(240,235,224,0.06)", alignItems: "start" }}>
+                <div key={svc.title} className="service-row" style={{ display: "grid", gridTemplateColumns: "280px 1fr", gap: "2rem", padding: "2rem 0", borderBottom: "1px solid rgba(240,235,224,0.06)", alignItems: "start" }}>
                   <h3 style={{ fontSize: "1.2rem", fontWeight: 800, lineHeight: 1.2, color: "#fff", borderLeft: `3px solid ${svc.color}`, paddingLeft: "1rem" }}>{svc.title}</h3>
                   <div>
                     <p style={{ fontSize: "0.95rem", color: "#8a7e84", lineHeight: 1.7, marginBottom: "1rem" }}>{svc.desc}</p>
@@ -614,23 +561,21 @@ export default function PrismWebsite() {
 
       <Divider gradient="linear-gradient(90deg, transparent, #8B2252, transparent)" />
 
-      {/* ─── 03 PRISM IP STUDIO ─── */}
+      {/* ─── 02 PRISM IP STUDIO ─── */}
       <section id="studio" style={{ position: "relative", padding: "clamp(5rem, 8vw, 8rem) 2rem", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, background: gradients.studio }} />
         <GrainOverlay />
-        {/* Creative woman with sunglasses — global stories energy */}
-        <img src="creative-woman-sunglasses.png" alt="" style={{
+        <img src="creative-woman-sunglasses.png" alt="" className="bg-portrait" style={{
           position: "absolute", right: "-2%", top: "5%", height: "70%",
-          opacity: 0.1, zIndex: 0, pointerEvents: "none",
+          zIndex: 0, pointerEvents: "none",
         }} />
-        {/* Geometric accent */}
         <img src="deco-geometric-pattern.png" alt="" style={{
           position: "absolute", left: "0", bottom: "0", width: "clamp(100px, 15vw, 220px)",
           opacity: 0.04, zIndex: 0, pointerEvents: "none", transform: "rotate(15deg)",
         }} />
         <div style={{ position: "relative", zIndex: 1, maxWidth: 1200, margin: "0 auto" }}>
           <Reveal>
-            <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.85rem", color: "#C4351A", letterSpacing: "0.15em" }}>03</span>
+            <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.85rem", color: "#C4351A", letterSpacing: "0.15em" }}>02</span>
             <h2 style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", fontWeight: 900, letterSpacing: "-0.02em", lineHeight: 1, marginTop: "0.5rem", color: "#fff" }}>
               PRISM{" "}
               <span style={{ background: headingGradients.studio, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>IP Studio</span>
@@ -683,6 +628,93 @@ export default function PrismWebsite() {
         </div>
       </section>
 
+      <Divider gradient="linear-gradient(90deg, transparent, #C91D7D, transparent)" />
+
+      {/* ─── 03 PRISM TRAINING ─── */}
+      <section id="training" style={{ position: "relative", padding: "clamp(4rem, 6vw, 6rem) 2rem clamp(5rem, 8vw, 8rem)" }}>
+        <div style={{ position: "absolute", inset: 0, background: gradients.training }} />
+        <GrainOverlay />
+        <div style={{ position: "relative", zIndex: 1, maxWidth: 1200, margin: "0 auto" }}>
+          <Reveal>
+            <div style={{ marginBottom: "2rem" }}>
+              <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.85rem", color: "#E74BA3", letterSpacing: "0.15em" }}>03</span>
+              <h2 style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", fontWeight: 900, letterSpacing: "-0.02em", lineHeight: 1, marginTop: "0.5rem", color: "#fff" }}>
+                PRISM{" "}
+                <span style={{ background: headingGradients.training, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Training</span>
+              </h2>
+              <p style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.75rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "#4DD0E1", marginTop: "0.75rem" }}>Building Sustainable Creators</p>
+            </div>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p style={{ fontSize: "1.1rem", color: "#8a7e84", maxWidth: 760, lineHeight: 1.8, fontWeight: 300, marginBottom: "3rem" }}>
+              A modern creative learning and industry upskilling platform designed for the future of storytelling. We equip creators, teams, and organizations with the creative, strategic, and production capabilities needed to thrive.
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.2}>
+            <div className="training-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1px", background: "rgba(240,235,224,0.06)", border: "1px solid rgba(240,235,224,0.06)", marginBottom: "3rem" }}>
+              <div style={{ background: "#120a0d", padding: "2.5rem" }}>
+                <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.7rem", color: "#C4351A", letterSpacing: "0.2em" }}>PROGRAM 01</span>
+                <h3 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#fff", margin: "0.75rem 0 1rem" }}>The 12-Week PRISM Creative Incubator</h3>
+                <p style={{ fontSize: "0.9rem", color: "#8a7e84", lineHeight: 1.7, marginBottom: "1.5rem" }}>
+                  An immersive AI-first creative incubator designed to help creators build sustainable careers in the modern creator economy.
+                </p>
+                <p style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.65rem", letterSpacing: "0.25em", textTransform: "uppercase", color: "#E74BA3", marginBottom: "0.75rem" }}>Career Pathways</p>
+                {["Original IP Creators", "Platform Builders", "Artist Collaborators", "Commercial Creators", "Hybrid Creators"].map((p) => (
+                  <p key={p} style={{ fontSize: "0.85rem", color: "#8a7e84", padding: "0.4rem 0", borderBottom: "1px solid rgba(240,235,224,0.06)" }}>
+                    <span style={{ color: "#C4351A", marginRight: "0.5rem" }}>→</span> {p}
+                  </p>
+                ))}
+              </div>
+              <div style={{ background: "#120a0d", padding: "2.5rem" }}>
+                <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.7rem", color: "#8B2252", letterSpacing: "0.2em" }}>PROGRAM 02</span>
+                <h3 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#fff", margin: "0.75rem 0 1rem" }}>Curriculum Design & Industry Capacity Building</h3>
+                <p style={{ fontSize: "0.9rem", color: "#8a7e84", lineHeight: 1.7, marginBottom: "1.5rem" }}>
+                  We partner with brands, institutions, creative ecosystems, and industry stakeholders to design and deliver future-focused creative learning experiences.
+                </p>
+                <p style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.65rem", letterSpacing: "0.25em", textTransform: "uppercase", color: "#4DD0E1", marginBottom: "0.75rem" }}>We help organizations</p>
+                {["Upskill creative teams", "Integrate AI into creative workflows", "Build internal storytelling capability", "Train emerging creative talent"].map((p) => (
+                  <p key={p} style={{ fontSize: "0.85rem", color: "#8a7e84", padding: "0.4rem 0", borderBottom: "1px solid rgba(240,235,224,0.06)" }}>
+                    <span style={{ color: "#8B2252", marginRight: "0.5rem" }}>→</span> {p}
+                  </p>
+                ))}
+              </div>
+              <div style={{ background: "#120a0d", padding: "2.5rem" }}>
+                <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.7rem", color: "#4DD0E1", letterSpacing: "0.2em" }}>PROGRAM 03</span>
+                <h3 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#fff", margin: "0.75rem 0 1rem" }}>Creative Leadership & Industry Workshops</h3>
+                <p style={{ fontSize: "0.9rem", color: "#8a7e84", lineHeight: 1.7, marginBottom: "1.5rem" }}>
+                  Short-form workshops and executive learning experiences for professionals navigating the future of creativity and AI-powered production.
+                </p>
+                <p style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.65rem", letterSpacing: "0.25em", textTransform: "uppercase", color: "#E74BA3", marginBottom: "0.75rem" }}>Topics include</p>
+                {["AI & the future of creativity", "Creative leadership", "Storytelling for brands", "Platform-native content strategy", "Creator economy trends", "Creative entrepreneurship"].map((p) => (
+                  <p key={p} style={{ fontSize: "0.85rem", color: "#8a7e84", padding: "0.4rem 0", borderBottom: "1px solid rgba(240,235,224,0.06)" }}>
+                    <span style={{ color: "#4DD0E1", marginRight: "0.5rem" }}>→</span> {p}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.3}>
+            <DecoAccent type="triangle" color="#E74BA3" style={{ marginBottom: "1.5rem" }} />
+            <p style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.75rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "#C4351A", marginBottom: "1.5rem" }}>Why PRISM Training</p>
+            <div className="why-cards" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "2rem" }}>
+              {[
+                { title: "AI-First Curriculum", desc: "Creators learn modern production workflows using the latest AI creative tools.", color: "#C4351A" },
+                { title: "Real Production Experience", desc: "Creators develop films, branded content, social campaigns, and platform-native work.", color: "#E74BA3" },
+                { title: "Creativity + Commerce", desc: "PRISM develops creators who understand both artistic excellence and commercial execution.", color: "#8B2252" },
+                { title: "Built for the Modern Creator Economy", desc: "Prepares creators for platforms, agencies, original IP creation, and evolving AI-powered industries.", color: "#4DD0E1" },
+              ].map((c) => (
+                <div key={c.title} style={{ paddingTop: "1.5rem", borderTop: `2px solid ${c.color}` }}>
+                  <h4 style={{ fontSize: "1rem", fontWeight: 700, color: "#fff", marginBottom: "0.5rem" }}>{c.title}</h4>
+                  <p style={{ fontSize: "0.85rem", color: "#8a7e84", lineHeight: 1.7 }}>{c.desc}</p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
       <Divider gradient="linear-gradient(90deg, transparent, #E74BA3, transparent)" />
 
       {/* ═══ WHY PRISM ═══ */}
@@ -697,7 +729,7 @@ export default function PrismWebsite() {
             </h2>
           </Reveal>
           <Reveal delay={0.15}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "2rem" }}>
+            <div className="why-cards" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "2rem" }}>
               {[
                 { title: "AI-Native by Design", desc: "We use AI to accelerate ideation, production, editing, localization, and creative iteration — enabling faster delivery without sacrificing quality.", color: "#C4351A" },
                 { title: "Built for Scale", desc: "A connected network of creative production hubs capable of delivering high-volume, high-quality work across multiple markets.", color: "#E74BA3" },
@@ -744,12 +776,10 @@ export default function PrismWebsite() {
       <section id="contact" style={{ position: "relative", textAlign: "center", padding: "clamp(6rem, 12vw, 14rem) 2rem", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, background: gradients.cta }} />
         <GrainOverlay />
-        {/* Futuristic creator — "Imagine It First" */}
-        <img src="futuristic-creator.png" alt="" style={{
+        <img src="futuristic-creator.png" alt="" className="bg-portrait" style={{
           position: "absolute", right: "5%", bottom: "0", height: "70%",
-          opacity: 0.12, zIndex: 0, pointerEvents: "none",
+          zIndex: 0, pointerEvents: "none",
         }} />
-        {/* Purple zigzag accent left */}
         <img src="deco-zigzag-purple.png" alt="" style={{
           position: "absolute", left: "3%", top: "20%", width: "clamp(60px, 10vw, 120px)",
           opacity: 0.1, zIndex: 0, pointerEvents: "none", transform: "rotate(90deg)",
@@ -787,7 +817,7 @@ export default function PrismWebsite() {
       {/* ═══ FOOTER ═══ */}
       <footer style={{ padding: "4rem 2rem 2rem", borderTop: "1px solid rgba(240,235,224,0.06)" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: "3rem", marginBottom: "4rem" }}>
+          <div className="footer-grid" style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: "3rem", marginBottom: "4rem" }}>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
                 <img src="prism-logo-mark.png" alt="PRISM" style={{ width: 28, height: 28 }} />
@@ -799,7 +829,7 @@ export default function PrismWebsite() {
             </div>
             {[
               { title: "Company", links: [{ label: "About", href: "#about" }, { label: "Partners", href: "#partners" }, { label: "Contact", href: "#contact" }] },
-              { title: "Divisions", links: [{ label: "PRISM Training", href: "#training" }, { label: "PRISM Agency", href: "#agency" }, { label: "PRISM IP Studio", href: "#studio" }] },
+              { title: "Divisions", links: [{ label: "PRISM Agency", href: "#agency" }, { label: "PRISM IP Studio", href: "#studio" }, { label: "PRISM Training", href: "#training" }] },
               { title: "Connect", links: [{ label: "LinkedIn", href: "#" }, { label: "Instagram", href: "#" }, { label: "YouTube", href: "#" }] },
             ].map((col) => (
               <div key={col.title}>
@@ -813,7 +843,7 @@ export default function PrismWebsite() {
               </div>
             ))}
           </div>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "2rem", borderTop: "1px solid rgba(240,235,224,0.06)", fontSize: "0.75rem", color: "#8a7e84" }}>
+          <div className="footer-bottom" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "2rem", borderTop: "1px solid rgba(240,235,224,0.06)", fontSize: "0.75rem", color: "#8a7e84", flexWrap: "wrap", gap: "0.5rem" }}>
             <span>© 2026 PRISM. All rights reserved.</span>
             <span style={{ fontFamily: "'Space Mono', monospace" }}>A New Engine for Human Imagination</span>
           </div>
