@@ -207,6 +207,17 @@ export default function PrismWebsite() {
             transform: none !important;
           }
 
+          /* CTA centered image keeps its centering on mobile */
+          .bg-portrait-center {
+            left: 50% !important;
+            right: auto !important;
+            transform: translateX(-50%) !important;
+            width: auto !important;
+            max-width: none !important;
+            height: 95% !important;
+            opacity: 0.45 !important;
+          }
+
           /* Newton prism image in "What Is" section */
           .bg-portrait-left {
             left: auto !important;
@@ -776,9 +787,13 @@ export default function PrismWebsite() {
       <section id="contact" style={{ position: "relative", textAlign: "center", padding: "clamp(6rem, 12vw, 14rem) 2rem", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, background: gradients.cta }} />
         <GrainOverlay />
-        <img src="futuristic-creator.png" alt="" className="bg-portrait" style={{
-          position: "absolute", right: "5%", bottom: "0", height: "70%",
+        <img src="futuristic-creator.png" alt="" className="bg-portrait bg-portrait-center" style={{
+          position: "absolute", left: "50%", top: "0", transform: "translateX(-50%)",
+          height: "100%", width: "auto", maxWidth: "none",
           zIndex: 0, pointerEvents: "none",
+          opacity: 0.35,
+          maskImage: "linear-gradient(to bottom, transparent 0%, black 15%, black 70%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 15%, black 70%, transparent 100%)",
         }} />
         <img src="deco-zigzag-purple.png" alt="" style={{
           position: "absolute", left: "3%", top: "20%", width: "clamp(60px, 10vw, 120px)",
